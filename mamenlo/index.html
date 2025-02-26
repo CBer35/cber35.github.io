@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Scratch con Fondo Chroma y Música</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: linear-gradient(45deg, #ff0000, #00ff00, #0000ff, #ff0000);
+            background-size: 800% 800%;
+            animation: chroma 10s ease infinite;
+            overflow: hidden;
+            font-family: 'Arial', sans-serif;
+        }
+
+        .container {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 25px;
+            border-radius: 15px;
+            backdrop-filter: blur(8px);
+            box-shadow: 0 0 25px rgba(0, 0, 0, 0.4);
+            text-align: center;
+        }
+
+        .welcome-text {
+            color: #ffffff;
+            font-size: 2.5em;
+            margin-bottom: 20px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+            letter-spacing: 2px;
+        }
+
+        @keyframes chroma {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+    </style>
+</head>
+<body>
+    <!-- Reproductor de audio automático -->
+    <audio id="musicPlayer" autoplay loop>
+        <source src="arabi.mp3" type="audio/mpeg">
+        Tu navegador no soporta el elemento de audio.
+    </audio>
+
+    <div class="container">
+        <h1 class="welcome-text">السلام عليكم</h1>
+        <iframe src="https://scratch.mit.edu/projects/1136843139/embed" 
+                allowtransparency="true" 
+                width="485" 
+                height="402" 
+                frameborder="0" 
+                scrolling="no" 
+                allowfullscreen>
+        </iframe>
+    </div>
+</body>
+</html>
