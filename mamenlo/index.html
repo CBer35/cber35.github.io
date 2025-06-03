@@ -44,22 +44,51 @@
     </style>
 </head>
 <body>
-    <!-- Reproductor de audio automático -->
-    <audio id="musicPlayer" autoplay loop>
-        <source src="jumpscare_sound.mp3" type="audio/mpeg">
+    <audio id="musicPlayer" autoplay loop controls>
+        <source src="https://huggingface.co/spaces/CBer35/asd/resolve/main/jumpscare_sound.mp3?download=true" type="audio/mpeg">
         Tu navegador no soporta el elemento de audio.
     </audio>
 
     <div class="container">
         <h1 class="welcome-text">السلام عليكم</h1>
-        <iframe src="https://scratch.mit.edu/projects/1136843139/embed" 
-                allowtransparency="true" 
-                width="485" 
-                height="402" 
-                frameborder="0" 
-                scrolling="no" 
+        <iframe src="https://scratch.mit.edu/projects/1136843139/embed"
+                allowtransparency="true"
+                width="485"
+                height="402"
+                frameborder="0"
+                scrolling="no"
                 allowfullscreen>
         </iframe>
     </div>
+
+    <script>
+        const musicPlayer = document.getElementById('musicPlayer');
+
+        // Intenta reproducir la música al cargar la página (algunos navegadores pueden bloquearlo)
+        musicPlayer.play().catch(error => {
+            console.log("La reproducción automática fue bloqueada por el navegador. El usuario deberá interactuar para iniciar el audio.");
+            // Podrías mostrar un botón para que el usuario inicie la música manualmente si la reproducción automática falla.
+        });
+
+        // Evento para evitar que la música se pause
+        musicPlayer.addEventListener('pause', function() {
+            // Si el audio está pausado y no ha terminado, vuelve a reproducirlo.
+            // Esto puede crear un bucle si el navegador intenta pausarlo por alguna razón interna.
+            if (musicPlayer.paused && !musicPlayer.ended) {
+                musicPlayer.play().catch(error => {
+                    console.log("Error al intentar reanudar la reproducción: ", error);
+                });
+            }
+        });
+
+        // Opcional: Para asegurar que comience al cargar si la reproducción automática tiene problemas y el usuario interactúa
+        document.body.addEventListener('click', function() {
+            if (musicPlayer.paused) {
+                musicPlayer.play().catch(error => {
+                    console.log("Error al intentar reproducir tras interacción: ", error);
+                });
+            }
+        }, { once: true }); // Solo se ejecuta una vez
+    </script>
 </body>
 </html>
