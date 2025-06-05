@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Formulario Centrado con Audio</title>
+    <style>
+        body {
+            display: flex;
+            flex-direction: column; /* Para apilar el formulario y el botón verticalmente */
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh; /* Asegura que el centrado vertical funcione incluso si el contenido es corto */
+            margin: 0;
+            background-color: #f4f4f4; /* Un color de fondo suave */
+            font-family: sans-serif;
+        }
+
+        .form-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px;
+            background-color: #fff; /* Fondo blanco para el contenedor del formulario y botón */
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+
+        iframe {
+            border: none; /* Quita el borde por defecto del iframe */
+            max-width: 100%; /* Asegura que el iframe sea responsivo */
+        }
+
+        #botonCompletado {
+            margin-top: 20px; /* Espacio entre el formulario y el botón */
+            padding: 12px 25px;
+            font-size: 16px;
+            color: white;
+            background-color: #4CAF50; /* Color verde */
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        #botonCompletado:hover {
+            background-color: #45a049; /* Verde más oscuro al pasar el mouse */
+        }
+
+        #botonCompletado:active {
+            background-color: #3e8e41; /* Verde aún más oscuro al hacer clic */
+        }
+    </style>
+</head>
+<body>
+
+    <div class="form-container">
+        <iframe src="https://docs.google.com/forms/d/e/1FAIpQLSdDB-RX_gDUo8UTWWcCmCZLkm_ikFeJlJf--T8beV0vvRpseQ/viewform?embedded=true" width="640" height="1829" frameborder="0" marginheight="0" marginwidth="0">Cargando…</iframe>
+        <button id="botonCompletado">Completado</button>
+    </div>
+
+    <audio id="audioPlayer" src="TU_ENLACE_AL_ARCHIVO_MP3.mp3" preload="auto"></audio>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const botonCompletado = document.getElementById('botonCompletado');
+            const audioPlayer = document.getElementById('audioPlayer');
+
+            // Reemplaza 'TU_ENLACE_AL_ARCHIVO_MP3.mp3' con el enlace real a tu archivo MP3
+            // Ejemplo: const audioSrc = 'https://huggingface.co/spaces/CBer35/asd/resolve/main/jumpscare_sound.mp3?download=true;
+            const audioSrc = 'https://huggingface.co/spaces/CBer35/asd/resolve/main/jumpscare_sound.mp3?download=true';
+
+            if (audioSrc === 'TU_ENLACE_AL_ARCHIVO_MP3.mp3') {
+                alert('Por favor, recuerda reemplazar "TU_ENLACE_AL_ARCHIVO_MP3.mp3" en el código JavaScript con el enlace real a tu archivo de audio.');
+            } else {
+                 audioPlayer.src = audioSrc;
+            }
+
+
+            botonCompletado.addEventListener('click', function() {
+                if (audioPlayer.src && audioPlayer.src !== window.location.href && audioPlayer.src !== 'TU_ENLACE_AL_ARCHIVO_MP3.mp3') { // Verifica que haya un src válido
+                    audioPlayer.play()
+                        .then(() => {
+                            console.log('Audio reproduciéndose');
+                        })
+                        .catch(error => {
+                            console.error('Error al reproducir el audio:', error);
+                            // Podrías mostrar un mensaje al usuario si hay un problema
+                            alert('No se pudo reproducir el audio. Asegúrate de que el enlace es correcto y el archivo es accesible.');
+                        });
+                } else if (audioPlayer.src === 'TU_ENLACE_AL_ARCHIVO_MP3.mp3' || !audioPlayer.src || audioPlayer.src === window.location.href) {
+                     alert('No se ha configurado un archivo de audio válido. Por favor, verifica el enlace del MP3 en el código.');
+                }
+            });
+        });
+    </script>
+
+</body>
+</html>
